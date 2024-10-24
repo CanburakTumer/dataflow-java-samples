@@ -8,3 +8,4 @@ build
 notes.txt
 logs.txt
 app/src/main/java/org/example/Credentials.java
+app/src/main/java/org/example/ClientSample.java

@@ -8,6 +8,8 @@
 
 package org.example;
 
+import org.example.Credentials;
+
 import java.io.ByteArrayInputStream;
 import java.lang.invoke.TypeDescriptor;
 import java.nio.ByteBuffer;
@@ -48,20 +50,21 @@ public class App {
         var pipeline = Pipeline.create(options);
 
         // TODO change to get these from PipelineOptions
-        String hostname = System.getenv("SOLACE_URI");
-        String hostname_with_protocol = System.getenv("SOLACE_URI");
-        String semp_hostname = System.getenv("SOLACE_URI");
-        String username = System.getenv("SOLACE_USERNAME");
-        String password = System.getenv("SOLACE_PASSWORD");
-        String vpnname = System.getenv("SOLACE_VPN");
+        String hostname = Credentials.getHostname(true);
+        String hostname_with_protocol = Credentials.getHostname(true);
+        String semp_hostname = Credentials.getSempHost();
+        String username = Credentials.getUsername();
+        String password = Credentials.getPassword();
+        String vpnname = Credentials.getVpnName();
 
+        System.out.println(hostname);
         // TODO resolve connection error
         try {
             PCollection<Record> events = pipeline.apply("Read from Solace",
-                SolaceIO.read().from(Queue.fromName("sec-test")).
+                SolaceIO.read().from(Queue.fromName(Credentials.getQueueName())).
                     withSempClientFactory(
                         BasicAuthSempClientFactory.builder()
-                            .host(hostname_with_protocol)
+                            .host(semp_hostname)
                             .username(username)
                             .password(password)
                             .vpnName(vpnname)

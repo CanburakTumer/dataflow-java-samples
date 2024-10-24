@@ -6,3 +6,5 @@ build
 
 # Personal files
 notes.txt
+logs.txt
+app/src/main/java/org/example/Credentials.java

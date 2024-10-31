@@ -37,7 +37,13 @@ import org.apache.beam.sdk.transforms.windowing.Window;
 import org.apache.qpid.jms.JmsConnectionFactory;
 import org.joda.time.Duration;
 import javax.jms.ConnectionFactory;
+import javax.jms.TextMessage;
 import java.io.IOException;
+import org.example.Credentials;
+import org.apache.beam.sdk.values.TypeDescriptors;
+import org.apache.beam.sdk.transforms.MapElements;
+import javax.jms.Message;
+import com.solacesystems.jcsmp.BytesXMLMessage;
 
 public class StreamingSimple {
   public interface Options extends PipelineOptions {
@@ -68,11 +74,11 @@ public class StreamingSimple {
 
   public static void main(String[] args) throws IOException {
     Options options = PipelineOptionsFactory.fromArgs(args).withValidation().as(Options.class);
-    ConnectionFactory solaceConnectionFactory = new JmsConnectionFactory(options.getSolaceUser(), options.getSolacePassword(), options.getSolaceURL());
+    ConnectionFactory solaceConnectionFactory = new JmsConnectionFactory(Credentials.getUsername(), Credentials.getPassword(), Credentials.getHostname());
 
     Pipeline pipeline = Pipeline.create(options);
 
-    pipeline.apply("ReadFromJms", JmsIO.read().withConnectionFactory(solaceConnectionFactory).withQueue(options.getSolaceReadQueue()));
+   // PCollection<JmsBytesMessage> byteMessages = pipeline.apply("ReadFromJms", JmsIO.read().withConnectionFactory(solaceConnectionFactory).withQueue(Credentials.getQueueName()));
         /*.apply("TransformJmsRecordAsPojo", ParDo.of(new DoFn<JmsRecord, String>() {
           @ProcessElement
           public void processElement(ProcessContext c) {
@@ -82,11 +88,28 @@ public class StreamingSimple {
             c.output(c.element().getPayload());
           }
         }));*/
+
+    /*PCollection<TextMessage> textMessages = byteMessages.apply(MapElements.into(TypeDescriptors.of(TextMessage.class))
+        .via(message -> {
+          try {
+            byte[] payload = new byte[(int) message.getBodyLength()];
+            message.readBytes(payload);
+            //TextMessage textMessage = solaceConnectionFactory.createTextMessage(); // Assuming solaceConnectionFactory can create TextMessages
+            //textMessage.setText(new String(payload, StandardCharsets.UTF_8));
+            return message;
+          } catch (Exception e) {
+            throw new RuntimeException("Error converting JMS message", e);
+          }
+        }));*/
+    pipeline.run().waitUntilFinish();
+    /*
     PipelineResult result = pipeline.run();
     try {
       result.waitUntilFinish();
     } catch (Exception exc) {
       result.cancel();
     }
+
+     */
   }
 }

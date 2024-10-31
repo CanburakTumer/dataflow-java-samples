@@ -23,13 +23,14 @@ dependencies {
     implementation(libs.guava)
 
     // App dependencies.
-    implementation("org.apache.beam:beam-sdks-java-core:2.59.0")
-    implementation("org.apache.beam:beam-runners-direct-java:2.59.0")
-    implementation("org.apache.beam:beam-sdks-java-io-solace:2.59.0")
+    implementation("org.apache.beam:beam-sdks-java-core:2.60.0")
+    implementation("org.apache.beam:beam-runners-direct-java:2.60.0")
+    implementation("org.apache.beam:beam-sdks-java-io-solace:2.60.0")
     implementation("org.apache.beam:beam-sdks-java-io-jms:2.59.0")
     implementation("org.apache.qpid:qpid-jms-client:0.47.0")
     implementation("org.slf4j:slf4j-jdk14:1.7.32")
     implementation("org.json:json:20240303")
+    implementation("com.solacesystems:sol-jcsmp:10.25.1")
 
     // Tests dependencies.
     testImplementation("junit:junit:4.13.2")

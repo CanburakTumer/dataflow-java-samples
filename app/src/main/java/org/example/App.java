@@ -66,7 +66,6 @@ public class App {
         var options = PipelineOptionsFactory.fromArgs(args).withValidation().as(Options.class);
         var pipeline = Pipeline.create(options);
 
-        // TODO change to get these from PipelineOptions
         String hostname = options.getJcsmpHostname();
         String sempHostname = options.getSempHostname();
         String username = options.getUsername();
@@ -105,7 +104,7 @@ public class App {
         } catch (Exception e){
             e.printStackTrace();
         }
-
+        // TODO add json convert
         pipeline.run().waitUntilFinish();
     }
 }
